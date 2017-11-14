@@ -1,6 +1,6 @@
 .idea/
 target/
-*.iml*
+*.iml
 application-local.properties
 LOG_PATH_IS_UNDEFINED/
 
