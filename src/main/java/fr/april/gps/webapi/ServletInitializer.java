@@ -1,4 +1,4 @@
-package fr.april.gps;
+package fr.april.gps.webapi;
 
 import org.springframework.boot.Banner;
 import org.springframework.boot.builder.SpringApplicationBuilder;

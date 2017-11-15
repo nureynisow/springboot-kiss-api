@@ -1,4 +1,4 @@
-package fr.april.gps.common.exceptions;
+package fr.april.gps.webapi.common.exceptions;
 
 import org.springframework.http.HttpStatus;
 

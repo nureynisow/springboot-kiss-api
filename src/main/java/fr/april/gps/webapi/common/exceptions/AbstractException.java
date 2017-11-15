@@ -1,4 +1,4 @@
-package fr.april.gps.common.exceptions;
+package fr.april.gps.webapi.common.exceptions;
 
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;

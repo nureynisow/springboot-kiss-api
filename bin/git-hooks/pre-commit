@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "============================================="
-echo "       running tslint on all .ts files"
+echo "       running maven install"
 echo "============================================="
 mvn install
 status=$?

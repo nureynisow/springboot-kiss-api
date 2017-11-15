@@ -1,4 +1,4 @@
-package fr.april.gps.common.controllers;
+package fr.april.gps.webapi.common.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
