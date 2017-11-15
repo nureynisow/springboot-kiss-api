@@ -1,8 +1,8 @@
 package fr.april.gps.webapi.authentication.controllers;
 
-import fr.april.gps.common.models.Profile;
 import fr.april.gps.webapi.authentication.models.SignupDataBean;
 import fr.april.gps.webapi.authentication.services.AuthenticationService;
+import fr.april.gps.webapi.common.models.Profile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package fr.april.gps.webapi.authentication.services;
+package fr.april.gps.webapi.authentication;
 
 import fr.april.gps.webapi.ApplicationTest;
 import fr.april.gps.webapi.common.configurations.security.services.ICryptoService;

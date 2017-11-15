@@ -1,11 +1,9 @@
-package fr.april.gps.webapi.authentication.models;
+package fr.april.gps.webapi.common.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * by osow on 15/11/17.
@@ -13,18 +11,13 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class SignupDataBean {
+@NoArgsConstructor
+public class Profile {
 
-	@NotNull
 	private String login;
 
-	@NotNull
 	private String password;
-
-	@NotNull
-	private String confirmPassword;
 
 	private String firstName, lastName;
 }
