@@ -1,5 +1,6 @@
 package fr.april.gps.webapi.common.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class Profile {
 
 	private String login;
 
+	@JsonIgnore
 	private String password;
 
 	private String firstName, lastName;

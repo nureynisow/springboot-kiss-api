@@ -8,4 +8,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * for GPS
  */
 public interface ProfileRepository extends PagingAndSortingRepository<ProfileEntity, String> {
+	ProfileEntity findByLogin(String login);
 }
