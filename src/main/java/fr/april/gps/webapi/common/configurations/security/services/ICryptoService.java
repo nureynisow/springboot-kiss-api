@@ -1,5 +1,7 @@
 package fr.april.gps.webapi.common.configurations.security.services;
 
+import fr.april.gps.webapi.common.models.Profile;
+
 /**
  * by osow on 15/11/17.
  * for GPS
@@ -22,4 +24,21 @@ public interface ICryptoService {
 	 * @return a boolean
 	 */
 	boolean checkPassword(String passwordToTest, String realPassword);
+
+	/**
+	 * Create a Json Web Token from profile
+	 *
+	 * @param profile the profile
+	 * @return the JWT
+	 */
+	String createTokenFromProfile(Profile profile);
+
+	/**
+	 * Save an issued token
+	 *
+	 * @param login user profile login
+	 * @param jwt   issued token
+	 * @return count of token issued to the given profile
+	 */
+	Long persistTokenInDB(String login, String jwt);
 }
