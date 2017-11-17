@@ -3,13 +3,13 @@
 				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>fr.april.gps</groupId>
-	<artifactId>web-api</artifactId>
+	<groupId>sn.dialibah</groupId>
+	<artifactId>kiss-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>web-api</name>
-	<description>Web API for Global Supplier System of April</description>
+	<name>KISS starter springboot API</name>
+	<description>Web API starter kit with spring boot - integrating spring security with JWT</description>
 
 
 	<properties>
@@ -28,34 +28,34 @@
 	</prerequisites>
 
 	<scm>
-		<developerConnection>${project.scm.prefix.url}/april/gps-api.git</developerConnection>
+		<developerConnection>https://github.com/nureynisow/springboot-kiss-api.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
 	<organization>
-		<name>April</name>
-		<url>http://www.april.fr</url>
+		<name>Dialibah</name>
+		<url>https://dialibah.fr</url>
 	</organization>
 	<inceptionYear>2017</inceptionYear>
 	<issueManagement>
-		<system>Jira</system>
-		<url>http://apriltechnologies.atlassian.net</url>
+		<system>Github</system>
+		<url>https://github.com/nureynisow/springboot-kiss-api/issues</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Jenkins</system>
-		<url>https://build.neo9.pro/job/April/</url>
+		<system>CircleCI</system>
+		<url></url>
 	</ciManagement>
 
 	<distributionManagement>
 		<repository>
 			<id>releases</id>
-			<name>April releases repository</name>
-			<url>https://repository.neo9.pro/content/repositories/april-releases/</url>
+			<name></name>
+			<url></url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>
-			<name>April snapshot repository</name>
-			<url>https://repository.neo9.pro/content/repositories/april-snapshots/</url>
+			<name></name>
+			<url></url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -278,6 +278,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
-
 </project>
