@@ -1,3 +1,5 @@
+[![Build Status](https://circleci.com/gh/nureynisow/springboot-kiss-api.svg?style=shield)](https://circleci.com/gh/nureynisow/springboot-kiss-api)
+[![license](https://img.shields.io/github/license/nureynisow/springboot-kiss-api.svg)](https://github.com/nureynisow/springboot-kiss-api/blob/master/LICENSE)
 KISS spring-boot API starter kit
 ================================
 
