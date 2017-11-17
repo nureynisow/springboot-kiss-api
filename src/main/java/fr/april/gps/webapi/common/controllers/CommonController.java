@@ -17,4 +17,9 @@ public class CommonController {
 	public ResponseEntity<String> ping() {
 		return new ResponseEntity<>("pong", HttpStatus.OK);
 	}
+
+	@RequestMapping(value = "pong", method = RequestMethod.GET)
+	public ResponseEntity<String> pong() {
+		return new ResponseEntity<>("ping", HttpStatus.OK);
+	}
 }

@@ -1,13 +1,19 @@
 package fr.april.gps.webapi.common.configurations.security;
 
+import fr.april.gps.webapi.authentication.services.IAuthenticationService;
+import fr.april.gps.webapi.common.configurations.security.models.TokenWrapper;
 import fr.april.gps.webapi.common.configurations.security.services.ICryptoService;
 import fr.april.gps.webapi.common.exceptions.AbstractException;
+import fr.april.gps.webapi.common.models.Profile;
+import fr.april.gps.webapi.common.models.UserAuthentication;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -18,6 +24,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * by osow on 15/11/17.
@@ -33,12 +41,15 @@ public class AuthenticationFilter extends GenericFilterBean {
 
 	private final ICryptoService cryptoService;
 
+	private final IAuthenticationService authenticationService;
+
 	@Value("${april.gps.token.header.name}")
 	private String TOKEN_HEADER_NAME;
 
 	@Autowired
-	public AuthenticationFilter(ICryptoService cryptoService) {
+	public AuthenticationFilter(ICryptoService cryptoService, IAuthenticationService authenticationService) {
 		this.cryptoService = cryptoService;
+		this.authenticationService = authenticationService;
 	}
 
 
@@ -55,14 +66,42 @@ public class AuthenticationFilter extends GenericFilterBean {
 			return;
 		}
 
+		TokenWrapper tokenWrapper;
 		try {
-//			TokenWrapper tokenWrapper = cryptoService.parseUserProfileFromToken(token);
+			tokenWrapper = cryptoService.parseUserProfileFromToken(token);
+			if (LocalDateTime.now().isAfter(LocalDateTime.parse(tokenWrapper.getExpirationDate()))) {
+				log.trace("{} The token {} of {} has expired", LOG_HEADER, token, tokenWrapper.getProfileId());
+				filterChain.doFilter(request, response);
+				return;
+			}
 
 		} catch (AbstractException ae) {
-			log.trace("{} Failed to decode token {}", LOG_HEADER, token);
+			log.trace("{} Failed to parse token {}", LOG_HEADER, token);
 			filterChain.doFilter(request, response);
+			return;
 		}
 
+		Authentication authentication = getAuthentication(tokenWrapper.getProfileId());
+		if (authentication != null)
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		response.setHeader(TOKEN_HEADER_NAME, token);
 
+		filterChain.doFilter(request, response);
+
+	}
+
+	/**
+	 * Get Authentication from user profile
+	 *
+	 * @param profileId user profile id
+	 * @return a {@link UserAuthentication}
+	 */
+	private Authentication getAuthentication(String profileId) {
+		Optional<Profile> profileOpt = this.authenticationService.getProfile(profileId);
+		return profileOpt.map(this::authenticationFromProfile).orElse(null);
+	}
+
+	private Authentication authenticationFromProfile(Profile profile) {
+		return new UserAuthentication(profile.getLogin(), profile);
 	}
 }

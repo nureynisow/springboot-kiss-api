@@ -13,9 +13,6 @@ public class TokenWrapper {
 
 	private String profileId;
 
-	private Integer sessionDuration;
-
 	private String expirationDate;
-
 
 }

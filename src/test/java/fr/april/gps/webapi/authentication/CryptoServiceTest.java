@@ -1,6 +1,7 @@
 package fr.april.gps.webapi.authentication;
 
 import fr.april.gps.webapi.ApplicationTest;
+import fr.april.gps.webapi.common.configurations.security.models.TokenWrapper;
 import fr.april.gps.webapi.common.configurations.security.services.ICryptoService;
 import fr.april.gps.webapi.common.models.Profile;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,8 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.time.LocalDateTime;
 
 /**
  * by osow on 15/11/17.
@@ -60,6 +63,17 @@ public class CryptoServiceTest {
 		Assert.assertTrue(numberOfToken == 1);
 		numberOfToken = cryptoService.persistTokenInDB(p.getLogin(), jwt);
 		Assert.assertTrue(numberOfToken == 1);
+	}
+
+	@Test
+	public void testTokenWrapping() {
+		Profile p = Profile.builder().login("test2").password("test").build();
+		String jwt = cryptoService.createTokenFromProfile(p);
+		cryptoService.persistTokenInDB(p.getLogin(), jwt);
+		TokenWrapper tokenWrapper = cryptoService.parseUserProfileFromToken(jwt);
+		Assert.assertEquals(tokenWrapper.getProfileId(), p.getLogin());
+		Assert.assertTrue(StringUtils.isNotBlank(tokenWrapper.getExpirationDate()));
+		Assert.assertTrue(LocalDateTime.parse(tokenWrapper.getExpirationDate()).isAfter(LocalDateTime.now()));
 	}
 
 }

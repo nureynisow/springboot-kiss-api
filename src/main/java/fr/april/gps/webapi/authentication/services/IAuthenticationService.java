@@ -5,6 +5,7 @@ import fr.april.gps.webapi.authentication.models.SignupDataBean;
 import fr.april.gps.webapi.common.models.Profile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 /**
  * by osow on 15/11/17.
@@ -34,4 +35,12 @@ public interface IAuthenticationService {
 	 * @param response {@link HttpServletResponse} to set token in header
 	 */
 	void setJsonWebTokenUsingProfile(Profile profile, HttpServletResponse response);
+
+	/**
+	 * Get profile by login
+	 *
+	 * @param profileId login
+	 * @return {@link Profile} if found
+	 */
+	Optional<Profile> getProfile(String profileId);
 }

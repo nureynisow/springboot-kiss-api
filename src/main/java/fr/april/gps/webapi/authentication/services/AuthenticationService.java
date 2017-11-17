@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * by osow on 15/11/17.
@@ -93,6 +94,12 @@ public class AuthenticationService implements IAuthenticationService {
 		final String jwt = cryptoService.createTokenFromProfile(profile);
 		cryptoService.persistTokenInDB(profile.getLogin(), jwt);
 		response.setHeader(tokenHeaderName, jwt);
+	}
+
+	@Override
+	public Optional<Profile> getProfile(String profileId) {
+		ProfileEntity profileEntity = profileRepository.findByLogin(profileId);
+		return profileEntity == null ? Optional.empty() : Optional.of(mapper.map(profileEntity, Profile.class));
 	}
 
 	/**

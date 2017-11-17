@@ -1,5 +1,6 @@
 package fr.april.gps.webapi.common.configurations.security.services;
 
+import fr.april.gps.webapi.common.configurations.security.models.TokenWrapper;
 import fr.april.gps.webapi.common.models.Profile;
 
 /**
@@ -41,4 +42,12 @@ public interface ICryptoService {
 	 * @return count of token issued to the given profile
 	 */
 	Long persistTokenInDB(String login, String jwt);
+
+	/**
+	 * Get encoded information from a JsonWebToken
+	 *
+	 * @param token the token
+	 * @return a {@link TokenWrapper}
+	 */
+	TokenWrapper parseUserProfileFromToken(String token);
 }

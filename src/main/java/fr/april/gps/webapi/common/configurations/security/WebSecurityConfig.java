@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						.authorizeRequests()
 						.antMatchers(HttpMethod.POST, "/auth/login").permitAll()
 						.antMatchers(HttpMethod.POST, "/auth/signup").permitAll()
-						.antMatchers("/common/**").permitAll()
+						.antMatchers("/common/ping").permitAll()
 						.anyRequest().authenticated()
 						.and()
 						.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
