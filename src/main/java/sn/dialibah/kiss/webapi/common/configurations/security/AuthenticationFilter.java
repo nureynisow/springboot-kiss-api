@@ -43,47 +43,43 @@ public class AuthenticationFilter extends GenericFilterBean {
 
 	private final IAuthenticationService authenticationService;
 
-	@Value("${kiss.token.header.name}")
-	private String TOKEN_HEADER_NAME;
+	@Value("${kiss.token.header.name}") private String TOKEN_HEADER_NAME;
 
-	@Autowired
-	public AuthenticationFilter(ICryptoService cryptoService, IAuthenticationService authenticationService) {
+	@Autowired public AuthenticationFilter(ICryptoService cryptoService, IAuthenticationService authenticationService) {
 		this.cryptoService = cryptoService;
 		this.authenticationService = authenticationService;
 	}
 
 
-	@Override
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws
-					IOException, ServletException {
-		HttpServletRequest request = (HttpServletRequest) servletRequest;
-		HttpServletResponse response = (HttpServletResponse) servletResponse;
+	@Override public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
+	                               FilterChain filterChain) throws IOException, ServletException {
+		HttpServletRequest request = (HttpServletRequest)servletRequest;
+		HttpServletResponse response = (HttpServletResponse)servletResponse;
 
 		final String token = request.getHeader(TOKEN_HEADER_NAME);
-		if (StringUtils.isBlank(token)) {
+		if(StringUtils.isBlank(token)){
 			log.trace("{} No token found in request header", LOG_HEADER);
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		TokenWrapper tokenWrapper;
-		try {
+		try{
 			tokenWrapper = cryptoService.parseUserProfileFromToken(token);
-			if (LocalDateTime.now().isAfter(LocalDateTime.parse(tokenWrapper.getExpirationDate()))) {
+			if(LocalDateTime.now().isAfter(LocalDateTime.parse(tokenWrapper.getExpirationDate()))){
 				log.trace("{} The token {} of {} has expired", LOG_HEADER, token, tokenWrapper.getProfileId());
 				filterChain.doFilter(request, response);
 				return;
 			}
 
-		} catch (AbstractException ae) {
+		}catch(AbstractException ae){
 			log.trace("{} Failed to parse token {}", LOG_HEADER, token);
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		Authentication authentication = getAuthentication(tokenWrapper.getProfileId());
-		if (authentication != null)
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+		if(authentication != null){ SecurityContextHolder.getContext().setAuthentication(authentication); }
 		response.setHeader(TOKEN_HEADER_NAME, token);
 
 		filterChain.doFilter(request, response);
@@ -94,6 +90,7 @@ public class AuthenticationFilter extends GenericFilterBean {
 	 * Get Authentication from user profile
 	 *
 	 * @param profileId user profile id
+	 *
 	 * @return a {@link UserAuthentication}
 	 */
 	private Authentication getAuthentication(String profileId) {

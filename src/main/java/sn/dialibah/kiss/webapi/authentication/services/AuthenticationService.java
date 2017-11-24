@@ -34,34 +34,27 @@ public class AuthenticationService implements IAuthenticationService {
 	private final ProfileRepository profileRepository;
 	private final DozerBeanMapper mapper;
 
-	@Value("${kiss.token.header.name}")
-	private String tokenHeaderName;
+	@Value("${kiss.token.header.name}") private String tokenHeaderName;
 
-	@Autowired
-	public AuthenticationService(ICryptoService cryptoService, ProfileRepository profileRepository, DozerBeanMapper
-					mapper) {
+	@Autowired public AuthenticationService(ICryptoService cryptoService, ProfileRepository profileRepository,
+	                                        DozerBeanMapper mapper) {
 		this.cryptoService = cryptoService;
 		this.profileRepository = profileRepository;
 		this.mapper = mapper;
 	}
 
 
-	@Override
-	public Profile signup(SignupDataBean signupDataBean) {
-		if (StringUtils.isBlank(signupDataBean.getPassword()) || StringUtils.isBlank(signupDataBean.getConfirmPassword())
-						|| !signupDataBean.getPassword().equals(signupDataBean.getConfirmPassword())) {
-			log.error("{} Empty password or not same passwords | pwd : {} | confirmPwd {}",
-							LOG_HEADER,
-							signupDataBean.getPassword(),
-							signupDataBean.getConfirmPassword());
+	@Override public Profile signup(SignupDataBean signupDataBean) {
+		if(StringUtils.isBlank(signupDataBean.getPassword()) || StringUtils
+						.isBlank(signupDataBean.getConfirmPassword()) || !signupDataBean.getPassword()
+						.equals(signupDataBean.getConfirmPassword())){
+			log.error("{} Empty password or not same passwords | pwd : {} | confirmPwd {}", LOG_HEADER,
+			          signupDataBean.getPassword(), signupDataBean.getConfirmPassword());
 			throw new InvalidPasswordException("Empty password or not same passwords");
 		}
-		Profile profile = Profile.builder()
-						.login(signupDataBean.getLogin())
+		Profile profile = Profile.builder().login(signupDataBean.getLogin())
 						.password(cryptoService.encryptPassword(signupDataBean.getPassword()))
-						.firstName(signupDataBean.getFirstName())
-						.lastName(signupDataBean.getLastName())
-						.build();
+						.firstName(signupDataBean.getFirstName()).lastName(signupDataBean.getLastName()).build();
 		log.info("{} Adding profile {}", LOG_HEADER, profile);
 
 		ProfileEntity profileEntity = this.mapper.map(profile, ProfileEntity.class);
@@ -71,33 +64,30 @@ public class AuthenticationService implements IAuthenticationService {
 		log.info("{} Saving profile entity {}", LOG_HEADER, profileEntity);
 
 		ProfileEntity saved = null;
-		try {
+		try{
 			saved = this.profileRepository.save(profileEntity);
-		} catch (DataAccessException dae) {
+		}catch(DataAccessException dae){
 			log.error("{} Save of profile {} failed with this error {}", LOG_HEADER, profileEntity, dae.getMessage());
 			throw new InternalServerException("Save of profile failed with this error : " + dae.getMessage());
 		}
 		return saved == null ? null : profile;
 	}
 
-	@Override
-	public Profile login(LoginDataBean loginDataBean) {
+	@Override public Profile login(LoginDataBean loginDataBean) {
 		log.info("{} looking for login {}", LOG_HEADER, loginDataBean.getLogin());
 		// TODO Login with Active Directory first
 		Profile profile = localLogin(loginDataBean.getLogin(), loginDataBean.getPassword());
-		if (profile == null) throw new UnableToLoginException("Bad credentials");
+		if(profile == null){ throw new UnableToLoginException("Bad credentials"); }
 		return profile;
 	}
 
-	@Override
-	public void setJsonWebTokenUsingProfile(Profile profile, HttpServletResponse response) {
+	@Override public void setJsonWebTokenUsingProfile(Profile profile, HttpServletResponse response) {
 		final String jwt = cryptoService.createTokenFromProfile(profile);
 		cryptoService.persistTokenInDB(profile.getLogin(), jwt);
 		response.setHeader(tokenHeaderName, jwt);
 	}
 
-	@Override
-	public Optional<Profile> getProfile(String profileId) {
+	@Override public Optional<Profile> getProfile(String profileId) {
 		ProfileEntity profileEntity = profileRepository.findByLogin(profileId);
 		return profileEntity == null ? Optional.empty() : Optional.of(mapper.map(profileEntity, Profile.class));
 	}
@@ -108,6 +98,7 @@ public class AuthenticationService implements IAuthenticationService {
 	 *
 	 * @param login    profile login
 	 * @param password profile password
+	 *
 	 * @return profile
 	 */
 	private Profile localLogin(String login, String password) {

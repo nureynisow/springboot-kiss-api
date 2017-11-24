@@ -71,9 +71,9 @@ public abstract class AbstractException extends RuntimeException {
 
 	public String getDeveloperMessage() {
 		StringBuilder sb = new StringBuilder(getMessage());
-		if (getCause() != null &&
-						StringUtils.isNotBlank(getCause().getMessage()))
+		if(getCause() != null && StringUtils.isNotBlank(getCause().getMessage())){
 			sb.append(':').append(getCause().getMessage());
+		}
 		return sb.toString();
 	}
 
